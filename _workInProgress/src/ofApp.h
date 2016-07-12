@@ -12,7 +12,8 @@ public:
     int level;
     
     Path(float startX_, float startY_, float endX_, float endY_, int level_);
-    void draw(float destinationX_, float destinationY_);
+    void setNext(float destinationX_, float destinationY_);
+    void draw();
 };
 
 class ofApp : public ofBaseApp{
