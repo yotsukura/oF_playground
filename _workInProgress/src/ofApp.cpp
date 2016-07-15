@@ -53,9 +53,18 @@ void ofApp::setup(){
         }
         penta[i].setNext(penta[destination].startX, penta[destination].startY);
     }
-    for (int i=0; i<6; i++) {
+    for (int i=0; i<4; i++) {
         Path q(penta[i].nextStartX, penta[i].nextStartY, penta[i+1].nextStartX, penta[i+1].nextStartY, 1);
         penta.push_back(q);
+        Path r(penta[4].nextStartX, penta[4].nextStartY, penta[0].nextStartX, penta[0].nextStartY, 1);
+        penta.push_back(r);
+    }
+    for (int i=5; i<penta.size(); i++){
+        int destination = i+3;
+        if (destination >= 10) {
+            destination -= 10;
+        }
+        penta[i].setNext(penta[destination].startX, penta[destination].startY);
     }
 }
 
