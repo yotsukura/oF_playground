@@ -1,9 +1,11 @@
 #include "ofApp.h"
 
 //--------------------------------------------------------------
-    ofxBox2d                               box2d;   // the box2d world
-    vector   <shared_ptr<ofxBox2dCircle> > circles; // default box2d circles
-    vector   <shared_ptr<ofxBox2dRect> >   boxes;   // defalut box2d rects
+ofxBox2d                               box2d;   // the box2d world
+vector   <shared_ptr<ofxBox2dCircle> > particles; // まだCustomRect定義していない
+ofxBox2dRect rect;
+ofImage particleImage;
+ofImage rectImage;
 //--------------------------------------------------------------
 void ofApp::setup(){
     ofSetFrameRate(60);
@@ -14,6 +16,12 @@ void ofApp::setup(){
     box2d.init();
     box2d.setGravity(0, 0);
     box2d.setFPS(30.0);
+    // set image
+    particleImage.load("emitter.png");
+    rectImage.load("particle.png");
+    
+    rect.fixture.filter.groupIndex = -1;
+    rect.setup(box2d.getWorld(), ofGetWidth()/2, ofGetHeight()/2, 1, 1);
 }
 
 //--------------------------------------------------------------
