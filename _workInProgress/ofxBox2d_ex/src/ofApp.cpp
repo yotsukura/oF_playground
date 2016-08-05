@@ -3,9 +3,46 @@
 //--------------------------------------------------------------
 ofxBox2d                               box2d;   // the box2d world
 vector   <shared_ptr<ofxBox2dCircle> > particles; // まだCustomRect定義していない
-ofxBox2dRect rect;
+ofxBox2dRect center;
 ofImage particleImage;
-ofImage rectImage;
+ofImage centerImage;
+//--------------------------------------------------------------
+class MyRect : public ofxBox2dRect {
+public:
+    MyRect(int _num);
+    void update();
+    
+    int num;
+    float radius;
+    ofSoundPlayer sound;
+    float soundSpeed;
+    float soundAmp;
+    float soundLfo;
+};
+//--------------------------------------------------------------
+MyRect::MyRect(int _num){
+    num = _num;
+    float notes[] = {1.0, 5.0/4.0, 4.0/3.0, 3.0/2.0};
+    float base[] = {8.0, 4.0, 2.0, 1.0, 0.5};
+    sound.load("ambientSound.wav");
+    soundSpeed = notes[num%4] / base[num%5];
+    sound.setSpeed(soundSpeed);
+    sound.setLoop(true);
+    soundAmp = 0;
+    sound.play();
+    soundLfo = ofRandom(0.5, 2.0);
+}
+
+void MyRect::update() {
+    radius = sin(ofGetElapsedTimef() * 10.0 * soundLfo) * 20 + 40;
+    ofVec2f pos = getPosition();
+    float distance = pos.distance(ofPoint(ofGetWidth()/2, ofGetHeight()/2));
+    soundAmp = (1.0 - distance/400.0)*0.2;
+    if (soundAmp < 0) {
+        soundAmp = 0;
+    }
+    sound.setVolume(soundAmp);
+}
 //--------------------------------------------------------------
 void ofApp::setup(){
     ofSetFrameRate(60);
@@ -18,20 +55,21 @@ void ofApp::setup(){
     box2d.setFPS(30.0);
     // set image
     particleImage.load("emitter.png");
-    rectImage.load("particle.png");
+    centerImage.load("particle.png");
     
-    rect.fixture.filter.groupIndex = -1;
-    rect.setup(box2d.getWorld(), ofGetWidth()/2, ofGetHeight()/2, 1, 1);
+    center.fixture.filter.groupIndex = -1;
+    center.setup(box2d.getWorld(), ofGetWidth()/2, ofGetHeight()/2, 1, 1);
 }
 
 //--------------------------------------------------------------
 void ofApp::update(){
-
+    box2d.update();
+    
 }
 
 //--------------------------------------------------------------
 void ofApp::draw(){
-
+    centerImage.draw(center.getPosition(), 100, 100);
 }
 
 //--------------------------------------------------------------
