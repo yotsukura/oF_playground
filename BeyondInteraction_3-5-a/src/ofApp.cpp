@@ -64,6 +64,16 @@ void ofApp::draw(){
             }
         }
     }
+    for(int i=0; i<particles.size(); i++){
+        ofVec2f p1 (particles[i]->getPosition());
+        ofVec2f p2 (center.getPosition());
+        float dist = p2.distance(p1);
+        if (dist < 600) {
+            int col = (600 - dist);
+            ofSetColor(255, 255, 255, col);
+            ofDrawLine(p1.x, p1.y, p2.x, p2.y);
+        }
+    }
     ofSetColor(255, 255, 255);
     for(int i=0; i<particles.size(); i++) {
         //ÂçäÂæÑ„ÇíË®àÁÆó
@@ -79,12 +89,17 @@ void ofApp::draw(){
     }
     float centerRadius = sin(ofGetElapsedTimef() * 100.0) * allAmp * 20.0 + allAmp * 40.0 + 40.0;
     ofVec2f offset(centerRadius, centerRadius);
-    centerImage.draw(center.getPosition() - offset, centerRadius * 4.0, centerRadius * 4.0);
+    centerImage.draw(center.getPosition() - offset * 2, centerRadius * 4.0, centerRadius * 4.0);
 }
 
 //--------------------------------------------------------------
 void ofApp::keyPressed(int key){
-
+    if (key == 'c') {
+        for (int i = 0; i < particles.size(); i++) {
+            particles[i]->destroy();
+        }
+        particles.clear();
+    }
 }
 
 //--------------------------------------------------------------
